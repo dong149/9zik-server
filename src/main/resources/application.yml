@@ -6,6 +6,7 @@ server:
 spring:
   profiles:
     active: local
+    include: oauth
   jpa:
     properties:
       hibernate:
