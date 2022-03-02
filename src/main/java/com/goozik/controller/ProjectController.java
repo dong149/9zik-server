@@ -1,9 +1,10 @@
 package com.goozik.controller;
 
-import com.goozik.entity.Project;
+import com.goozik.model.entity.Project;
 import com.goozik.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +25,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public Page<Project> getProjects(@RequestParam int size, @RequestParam int page) {
-        return projectService.getProjects(size, page);
+    public Page<Project> getProjects(@RequestParam int page, @RequestParam int size) {
+        return projectService.getProjects(PageRequest.of(page, size));
     }
 
     @PostMapping

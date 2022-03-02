@@ -1,4 +1,4 @@
-package com.goozik.entity.constants;
+package com.goozik.model.constants;
 
 /**
  * 프로젝트 타입

@@ -1,7 +1,8 @@
 package com.goozik.service;
 
-import com.goozik.entity.Project;
+import com.goozik.model.entity.Project;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectService {
 
-    public Page<Project> getProjects(int size, int page) {
+    public Page<Project> getProjects(Pageable pageable) {
         return null;
     }
 }

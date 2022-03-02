@@ -1,6 +1,6 @@
 package com.goozik.repository;
 
-import com.goozik.entity.Project;
+import com.goozik.model.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
