@@ -1,11 +1,6 @@
-server:
-  port: 8080
-
----
-
 spring:
   profiles:
-    active: local
+    active: test
   jpa:
     properties:
       hibernate:
@@ -19,9 +14,3 @@ logging:
     org:
       hibernate:
         SQL: debug
-
----
-
-spring:
-  profiles:
-    active: production
