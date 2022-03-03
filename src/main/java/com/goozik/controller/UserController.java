@@ -15,14 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-    @GetMapping("/test")
-    public String test() {
-        return "success";
-    }
-
     @GetMapping
     public String getUser(@LoginUser SessionUser user) {
-        log.debug(user.toString());
+        log.info(user.toString());
 
         return "success";
     }

@@ -31,6 +31,31 @@ public class Project {
     @GeneratedValue
     private Long id;
     /**
+     * 타이틀
+     */
+    @Column
+    private String title;
+    /**
+     * 설명
+     */
+    @Column
+    private String description;
+    /**
+     * 대표 이미지 링크
+     */
+    @Column
+    private String picture;
+    /**
+     * 대표 gif 링크
+     */
+    @Column
+    private String gif;
+    /**
+     * 좋아요
+     */
+    @Column
+    private Integer like;
+    /**
      * 프로젝트 타입
      */
     @Column
@@ -51,4 +76,9 @@ public class Project {
      */
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+    /**
+     * 삭제일
+     */
+    @Column
+    private LocalDateTime deletedAt;
 }
