@@ -2,6 +2,7 @@ package com.goozik.controller;
 
 import com.goozik.model.entity.Project;
 import com.goozik.service.ProjectService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author ryu
  */
+@Api
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/project")

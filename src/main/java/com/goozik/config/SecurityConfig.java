@@ -14,6 +14,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] PERMIT_ANT_PATTERNS = {
+        "/",
+        "/api/v1/project",
+        "/h2-console/**",
+        "/swagger-ui/**"};
+
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Override
@@ -21,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable().headers().frameOptions().disable().and()
             .authorizeRequests()
-            .antMatchers("/", "/api/v1/project", "/h2-console/**").permitAll()
+            .antMatchers(PERMIT_ANT_PATTERNS).permitAll()
             .antMatchers("/api/v1/**").hasRole(Role.GUEST.name())
             .anyRequest().authenticated()
             .and()
