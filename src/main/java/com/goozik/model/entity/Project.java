@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,7 +55,7 @@ public class Project {
      * 좋아요
      */
     @Column
-    private Integer like;
+    private Integer likeCount;
     /**
      * 프로젝트 타입
      */
@@ -81,4 +82,12 @@ public class Project {
      */
     @Column
     private LocalDateTime deletedAt;
+
+    @Builder
+    public Project(String title, String description, Integer likeCount, ProjectType projectType) {
+        this.title = title;
+        this.description = description;
+        this.likeCount = likeCount;
+        this.projectType = projectType;
+    }
 }

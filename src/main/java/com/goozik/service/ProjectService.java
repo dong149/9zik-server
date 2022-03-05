@@ -1,17 +1,31 @@
 package com.goozik.service;
 
+import com.goozik.model.dto.ProjectDto;
 import com.goozik.model.entity.Project;
+import com.goozik.repository.ProjectRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ryu
  */
 @Service
+@RequiredArgsConstructor
 public class ProjectService {
 
+    private final ProjectRepository projectRepository;
+
+    @Transactional(readOnly = true)
     public Page<Project> getProjects(Pageable pageable) {
-        return null;
+        return projectRepository.findAll(pageable);
+    }
+
+    public void createProject(ProjectDto.Request request) {
+        Project project = ProjectDto.Request.convertToEntity(request);
+
+        projectRepository.save(project);
     }
 }
