@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-/**
- * @author ryu
- */
 public class ProjectDto {
 
     private static final int DEFAULT_LIKE_COUNT = 0;

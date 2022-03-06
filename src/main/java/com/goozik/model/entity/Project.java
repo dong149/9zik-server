@@ -15,71 +15,33 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-/**
- * 프로젝트
- *
- * @author ryu
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
 
-    /**
-     * id
-     */
     @Id
     @GeneratedValue
     private Long id;
-    /**
-     * 타이틀
-     */
     @Column
     private String title;
-    /**
-     * 설명
-     */
     @Column
     private String description;
-    /**
-     * 대표 이미지 링크
-     */
     @Column
     private String picture;
-    /**
-     * 대표 gif 링크
-     */
     @Column
     private String gif;
-    /**
-     * 좋아요
-     */
     @Column
     private Integer likeCount;
-    /**
-     * 프로젝트 타입
-     */
     @Column
     @Enumerated(EnumType.STRING)
     private ProjectType projectType;
-    /**
-     * 생성자
-     */
     @Column
     private String createdBy;
-    /**
-     * 생성일
-     */
     @CreationTimestamp
     private LocalDateTime createdAt;
-    /**
-     * 수정일
-     */
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-    /**
-     * 삭제일
-     */
     @Column
     private LocalDateTime deletedAt;
 

@@ -3,9 +3,6 @@ package com.goozik.model.constants;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-/**
- * @author ryu1
- */
 @Getter
 @RequiredArgsConstructor
 public enum Role {

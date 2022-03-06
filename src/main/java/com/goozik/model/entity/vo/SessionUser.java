@@ -5,9 +5,6 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.ToString;
 
-/**
- * @author ryu
- */
 @Getter
 @ToString
 public class SessionUser implements Serializable {
