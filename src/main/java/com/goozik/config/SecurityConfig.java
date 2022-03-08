@@ -1,13 +1,18 @@
 package com.goozik.config;
 
 import com.goozik.model.constants.Role;
-import com.goozik.service.CustomOAuth2UserService;
+import com.goozik.security.CustomOAuth2UserService;
+import com.goozik.security.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.goozik.security.OAuth2AuthenticationFailureHandler;
+import com.goozik.security.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+@Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -22,16 +27,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/configuration/security",
         "/swagger-ui.html",
         "/webjars/**",
-        "/swagger/**"};
+        "/swagger/**",
+        "/actuator/**"};
 
     private static final String[] PERMIT_ANT_PATTERNS = {
         "/",
         "/api/v1/project",
         "/h2-console/**",
         "/swagger-ui/**",
-        "/swagger-resources/**"};
+        "/swagger-resources/**",
+        "/actuator/**"};
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -40,18 +50,49 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable().headers().frameOptions().disable().and()
-            .authorizeRequests()
+        http.cors()
+            .and()
+            .csrf()
+            .disable()
+            .formLogin()
+            .disable();
+
+        http.authorizeRequests()
             .antMatchers(PERMIT_ANT_PATTERNS).permitAll()
-            .antMatchers("/api/v1/**").hasRole(Role.GUEST.name())
+            .antMatchers("/api/v1/**").hasRole(Role.USER.name())
             .anyRequest().authenticated()
             .and()
             .logout()
             .logoutSuccessUrl("/")
             .and()
             .oauth2Login()
+            .authorizationEndpoint()
+            .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+            .baseUri("/oauth2/authorization")
+            .and()
+            .redirectionEndpoint()
+            .baseUri("/oauth2/callback/*")
+            .and()
             .userInfoEndpoint()
-            .userService(customOAuth2UserService);
+            .userService(customOAuth2UserService)
+            .and()
+            .successHandler(oAuth2SuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler);
     }
+//            .oauth2Login()
+//            .authorizationEndpoint()
+//            .baseUri("/oauth2/authorize")
+//            .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+//            .and()
+//            .redirectionEndpoint()
+//            .baseUri("/oauth2/callback/*")
+//            .and()
+//            .userInfoEndpoint()
+//            .userService(customOAuth2UserService)
+//            .and()
+//            .successHandler(oAuth2AuthenticationSuccessHandler)
+//            .failureHandler(oAuth2AuthenticationFailureHandler);
+//            .oauth2Login()
+//            .userInfoEndpoint()
+//            .userService(customOAuth2UserService);
 }

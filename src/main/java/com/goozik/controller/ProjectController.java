@@ -3,7 +3,6 @@ package com.goozik.controller;
 import com.goozik.model.dto.ProjectDto;
 import com.goozik.model.entity.Project;
 import com.goozik.service.ProjectService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

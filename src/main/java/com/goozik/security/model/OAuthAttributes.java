@@ -1,4 +1,4 @@
-package com.goozik.model.entity.vo;
+package com.goozik.security.model;
 
 import com.goozik.model.constants.Role;
 import com.goozik.model.entity.User;

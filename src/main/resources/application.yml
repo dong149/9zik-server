@@ -17,7 +17,7 @@ spring:
         format_sql: true
         show_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test?serverTimezone=UTC&characterEncoding=UTF-8
@@ -27,6 +27,15 @@ spring:
 logging:
     level:
       root: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 ---
 

@@ -1,56 +1,52 @@
 package com.goozik.model.entity;
 
+import com.goozik.model.constants.ProviderType;
 import com.goozik.model.constants.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * 유저
- *
- * @author ryu
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
-    /**
-     * id
-     */
     @Id
     @GeneratedValue
     private Long id;
-    /**
-     * 이름
-     */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
     @Column(nullable = false)
     private String name;
-    /**
-     * 이메일 주소
-     */
+    @Column(nullable = false)
+    private String password;
     @Column(nullable = false)
     private String email;
-    /**
-     * 사진
-     */
     @Column
     private String picture;
-    /**
-     * 권한
-     */
     @Column(nullable = false)
     private Role role;
 
     @Builder
-    public User(String name, String email, String picture, Role role) {
+    public User(
+        ProviderType providerType,
+        String name,
+        String password,
+        String email,
+        String picture,
+        Role role) {
+
+        this.providerType = providerType;
         this.name = name;
+        this.password = password;
         this.email = email;
         this.picture = picture;
         this.role = role;
