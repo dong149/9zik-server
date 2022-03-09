@@ -2,7 +2,6 @@ package com.goozik.security;
 
 import com.goozik.security.model.AppProperties;
 import com.goozik.utils.CookieUtils;
-import com.goozik.utils.JwtTokenUtil;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final AppProperties appProperties;
 
@@ -58,7 +57,7 @@ public class OAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccess
                 "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String token = jwtTokenUtil.generateToken(authentication.getName());
+        String token = jwtTokenProvider.generateToken(authentication.getName());
         return UriComponentsBuilder.fromUriString(targetUrl)
             .queryParam("token", token)
             .build().toUriString();

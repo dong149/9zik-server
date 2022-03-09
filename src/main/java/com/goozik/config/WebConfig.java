@@ -29,6 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
                 HttpMethod.PUT.name(),
                 HttpMethod.OPTIONS.name(),
                 HttpMethod.DELETE.name())
+            .allowCredentials(true)
             .allowedOrigins("*");
     }
 }

@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers(WEB_IGNORE_ANT_PATTERNS);
     }
 
@@ -79,20 +79,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .successHandler(oAuth2SuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler);
     }
-//            .oauth2Login()
-//            .authorizationEndpoint()
-//            .baseUri("/oauth2/authorize")
-//            .authorizationRequestRepository(cookieAuthorizationRequestRepository())
-//            .and()
-//            .redirectionEndpoint()
-//            .baseUri("/oauth2/callback/*")
-//            .and()
-//            .userInfoEndpoint()
-//            .userService(customOAuth2UserService)
-//            .and()
-//            .successHandler(oAuth2AuthenticationSuccessHandler)
-//            .failureHandler(oAuth2AuthenticationFailureHandler);
-//            .oauth2Login()
-//            .userInfoEndpoint()
-//            .userService(customOAuth2UserService);
 }
