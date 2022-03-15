@@ -9,21 +9,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JwtTokenProvider implements Serializable {
 
+    private static final String AUTHORITIES_KEY = "auth";
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    //retrieve username from jwt token
-    // jwt token으로부터 username을 획득한다.
-    public String getUsernameFromToken(String token) {
+    //retrieve email from jwt token
+    public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -56,9 +61,9 @@ public class JwtTokenProvider implements Serializable {
 
     //generate token for user
     // 유저를 위한 토큰을 발급해준다.
-    public String generateToken(String userName) {
+    public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userName);
+        return doGenerateToken(claims, email);
     }
 
     //while creating the token -
@@ -79,11 +84,31 @@ public class JwtTokenProvider implements Serializable {
 
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
+        final String username = getEmailFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.error("validate error token : {}", token);
+        }
+        return false;
     }
 
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("X-AUTH-TOKEN");
+    }
+
+    public Authentication getAuthentication(String accessToken, UserDetails userDetails) {
+        // 토큰 복호화
+        Claims claims = getAllClaimsFromToken(accessToken);
+
+        // UserDetails 객체를 만들어서 Authentication 리턴
+        UserDetails principal = new User(claims.getSubject(), "", userDetails.getAuthorities());
+
+        return new UsernamePasswordAuthenticationToken(principal, "", userDetails.getAuthorities());
     }
 }
