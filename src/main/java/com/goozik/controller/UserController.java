@@ -22,7 +22,6 @@ public class UserController {
         String email = request.getUserPrincipal().getName();
 
         log.info("user email : {}", email);
-//
         return userService.getUser(email);
     }
 }
