@@ -1,7 +1,6 @@
 package com.goozik.controller;
 
 import com.goozik.model.dto.ProjectDto;
-import com.goozik.model.entity.Project;
 import com.goozik.service.ProjectService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public Page<Project> getProjects(
+    public Page<ProjectDto.Response> getProjects(
         @ApiParam(required = true, defaultValue = "0") @RequestParam int page,
         @ApiParam(required = true, defaultValue = "50") @RequestParam int size) {
 

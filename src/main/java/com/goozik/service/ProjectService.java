@@ -16,8 +16,8 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
     @Transactional(readOnly = true)
-    public Page<Project> getProjects(Pageable pageable) {
-        return projectRepository.findAll(pageable);
+    public Page<ProjectDto.Response> getProjects(Pageable pageable) {
+        return projectRepository.findAll(pageable).map(ProjectDto.Response::from);
     }
 
     public void createProject(ProjectDto.Request request) {
