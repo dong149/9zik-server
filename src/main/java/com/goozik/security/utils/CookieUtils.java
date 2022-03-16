@@ -1,4 +1,4 @@
-package com.goozik.utils;
+package com.goozik.security.utils;
 
 import java.util.Base64;
 import java.util.Optional;

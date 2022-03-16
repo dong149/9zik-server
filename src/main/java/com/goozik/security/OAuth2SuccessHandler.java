@@ -1,7 +1,7 @@
 package com.goozik.security;
 
 import com.goozik.security.model.AppProperties;
-import com.goozik.utils.CookieUtils;
+import com.goozik.security.utils.CookieUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;

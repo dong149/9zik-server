@@ -1,5 +1,6 @@
 package com.goozik.security;
 
+import com.goozik.security.service.JwtUserDetailsService;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

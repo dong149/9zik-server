@@ -1,6 +1,11 @@
-package com.goozik.security;
+package com.goozik.config;
 
 import com.goozik.model.constants.Role;
+import com.goozik.security.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.goozik.security.JwtAuthenticationFilter;
+import com.goozik.security.OAuth2AuthenticationFailureHandler;
+import com.goozik.security.OAuth2SuccessHandler;
+import com.goozik.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

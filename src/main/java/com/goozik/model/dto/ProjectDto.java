@@ -10,8 +10,6 @@ import lombok.ToString;
 
 public class ProjectDto {
 
-    private static final int DEFAULT_LIKE_COUNT = 0;
-
     @Getter
     @ToString
     @NoArgsConstructor
@@ -19,16 +17,9 @@ public class ProjectDto {
 
         private String title;
         private String description;
+        private String email;
         private ProjectType projectType;
-
-        public static Project convertToEntity(Request request) {
-            return Project.builder()
-                          .title(request.title)
-                          .description(request.description)
-                          .likeCount(DEFAULT_LIKE_COUNT)
-                          .projectType(request.projectType)
-                          .build();
-        }
+        private int likeCount;
     }
 
     @Getter

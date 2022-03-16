@@ -1,12 +1,12 @@
-package com.goozik.security;
+package com.goozik.security.service;
 
 import com.goozik.model.constants.ProviderType;
 import com.goozik.model.constants.Role;
 import com.goozik.model.entity.User;
+import com.goozik.repository.UserRepository;
 import com.goozik.security.model.OAuth2UesrInfoFactory;
 import com.goozik.security.model.OAuth2UserInfo;
 import com.goozik.security.model.OAuthAttributes;
-import com.goozik.repository.UserRepository;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -65,9 +65,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration()
-            .getProviderDetails()
-            .getUserInfoEndpoint()
-            .getUserNameAttributeName();
+                                                  .getProviderDetails()
+                                                  .getUserInfoEndpoint()
+                                                  .getUserNameAttributeName();
 
         OAuthAttributes attributes = OAuthAttributes.of(
             registrationId,
@@ -82,13 +82,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         User user = User.builder()
-            .name(userInfo.getName())
-            .password(EMPTY_PASSWORD)
-            .email(userInfo.getEmail())
-            .picture(userInfo.getPicture())
-            .role(Role.USER)
-            .providerType(providerType)
-            .build();
+                        .name(userInfo.getName())
+                        .password(EMPTY_PASSWORD)
+                        .email(userInfo.getEmail())
+                        .picture(userInfo.getPicture())
+                        .role(Role.USER)
+                        .providerType(providerType)
+                        .build();
 
         return userRepository.save(user);
     }

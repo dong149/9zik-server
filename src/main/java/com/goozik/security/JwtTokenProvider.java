@@ -21,19 +21,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider implements Serializable {
 
-    private static final String AUTHORITIES_KEY = "auth";
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    //retrieve email from jwt token
     public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    //retrieve expiration date from jwt token
-    // jwt token으로부터 만료일자를 알려준다.
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -43,24 +39,19 @@ public class JwtTokenProvider implements Serializable {
         return claimsResolver.apply(claims);
     }
 
-    //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(secret)
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                   .setSigningKey(secret)
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody();
     }
 
-    //check if the token has expired
-    // 토큰이 만료되었는지 확인한다.
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    //generate token for user
-    // 유저를 위한 토큰을 발급해준다.
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, email);
@@ -74,15 +65,14 @@ public class JwtTokenProvider implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(subject)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-            .signWith(SignatureAlgorithm.HS256, secret)
-            .compact();
+                   .setClaims(claims)
+                   .setSubject(subject)
+                   .setIssuedAt(new Date(System.currentTimeMillis()))
+                   .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                   .signWith(SignatureAlgorithm.HS256, secret)
+                   .compact();
     }
 
-    //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getEmailFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -103,10 +93,7 @@ public class JwtTokenProvider implements Serializable {
     }
 
     public Authentication getAuthentication(String accessToken, UserDetails userDetails) {
-        // 토큰 복호화
         Claims claims = getAllClaimsFromToken(accessToken);
-
-        // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", userDetails.getAuthorities());
 
         return new UsernamePasswordAuthenticationToken(principal, "", userDetails.getAuthorities());

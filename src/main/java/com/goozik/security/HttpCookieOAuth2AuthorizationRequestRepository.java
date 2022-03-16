@@ -1,6 +1,6 @@
 package com.goozik.security;
 
-import com.goozik.utils.CookieUtils;
+import com.goozik.security.utils.CookieUtils;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,8 +21,9 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
     public OAuth2AuthorizationRequest loadAuthorizationRequest(
         HttpServletRequest httpServletRequest) {
         return CookieUtils.getCookie(httpServletRequest, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME)
-            .map(cookie -> CookieUtils.deserialize(cookie, OAuth2AuthorizationRequest.class))
-            .orElse(null);
+                          .map(cookie -> CookieUtils.deserialize(cookie,
+                                                                 OAuth2AuthorizationRequest.class))
+                          .orElse(null);
     }
 
     @Override
@@ -33,18 +34,19 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 
         if (oAuth2AuthorizationRequest == null) {
             CookieUtils.deleteCookie(httpServletRequest, httpServletResponse,
-                OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+                                     OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             CookieUtils.deleteCookie(httpServletRequest, httpServletResponse,
-                REDIRECT_URI_PARAM_COOKIE_NAME);
+                                     REDIRECT_URI_PARAM_COOKIE_NAME);
             return;
         }
         CookieUtils.addCookie(httpServletResponse, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
-            CookieUtils.serialize(oAuth2AuthorizationRequest), cookieExpireSeconds);
+                              CookieUtils.serialize(oAuth2AuthorizationRequest),
+                              cookieExpireSeconds);
         String redirectUriAfterLogin = httpServletRequest.getParameter(
             REDIRECT_URI_PARAM_COOKIE_NAME);
         if (StringUtils.isNotBlank(redirectUriAfterLogin)) {
             CookieUtils.addCookie(httpServletResponse, REDIRECT_URI_PARAM_COOKIE_NAME,
-                redirectUriAfterLogin, cookieExpireSeconds);
+                                  redirectUriAfterLogin, cookieExpireSeconds);
         }
     }
 
