@@ -1,7 +1,7 @@
 package com.goozik.security;
 
 import com.goozik.security.model.AppProperties;
-import com.goozik.utils.CookieUtils;
+import com.goozik.security.utils.CookieUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,11 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final AppProperties appProperties;
-
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
 
     //oauth2인증이 성공적으로 이뤄졌을 때 실행된다
     //token을 포함한 uri을 생성 후 인증요청 쿠키를 비워주고 redirect 한다.
@@ -57,7 +55,8 @@ public class OAuth2SuccessHandler extends SavedRequestAwareAuthenticationSuccess
                 "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String token = jwtTokenProvider.generateToken(authentication.getName());
+        DefaultOAuth2User oAuth2User = (DefaultOAuth2User)authentication.getPrincipal();
+        String token = jwtTokenProvider.generateToken(oAuth2User.getAttribute("email"));
         return UriComponentsBuilder.fromUriString(targetUrl)
             .queryParam("token", token)
             .build().toUriString();

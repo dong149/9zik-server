@@ -2,7 +2,10 @@ package com.goozik.service;
 
 import com.goozik.model.dto.ProjectDto;
 import com.goozik.model.entity.Project;
+import com.goozik.model.entity.User;
 import com.goozik.repository.ProjectRepository;
+import com.goozik.repository.UserRepository;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,15 +17,24 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Page<Project> getProjects(Pageable pageable) {
-        return projectRepository.findAll(pageable);
+    public Page<ProjectDto.Response> getProjects(Pageable pageable) {
+        return projectRepository.findAll(pageable).map(ProjectDto.Response::from);
     }
 
+    @Transactional
     public void createProject(ProjectDto.Request request) {
-        Project project = ProjectDto.Request.convertToEntity(request);
+        User user = getUserByEmail(request.getEmail());
+        Project project = Project.of(request, user);
 
         projectRepository.save(project);
+    }
+
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> {
+            throw new EntityNotFoundException("user not found");
+        });
     }
 }

@@ -1,16 +1,18 @@
 package com.goozik.config;
 
 import com.goozik.model.constants.Role;
-import com.goozik.security.CustomOAuth2UserService;
 import com.goozik.security.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.goozik.security.JwtAuthenticationFilter;
 import com.goozik.security.OAuth2AuthenticationFailureHandler;
 import com.goozik.security.OAuth2SuccessHandler;
+import com.goozik.security.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
     public void configure(WebSecurity web) {
@@ -78,5 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .successHandler(oAuth2SuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler);
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

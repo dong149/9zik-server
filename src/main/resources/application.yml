@@ -3,7 +3,7 @@ server:
 
 spring:
   jackson:
-    property-naming-strategy : SNAKE_CASE
+    property-naming-strategy: SNAKE_CASE
 
 ---
 
@@ -25,8 +25,8 @@ spring:
     password: smith1380!
 
 logging:
-    level:
-      root: info
+  level:
+    root: info
 
 management:
   endpoints:
