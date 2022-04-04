@@ -3,6 +3,7 @@ package com.goozik.model.entity;
 import com.goozik.model.constants.ProjectType;
 import com.goozik.model.dto.ProjectDto;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -53,6 +54,8 @@ public class Project extends BaseTimeEntity {
         Integer likeCount,
         ProjectType projectType,
         User user) {
+
+        Objects.requireNonNull(user, "user must not be null");
 
         this.title = title;
         this.description = description;

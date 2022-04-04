@@ -20,6 +20,11 @@ public class ProjectDto {
         private String email;
         private ProjectType projectType;
         private int likeCount;
+
+        @Builder
+        public Request(String email) {
+            this.email = email;
+        }
     }
 
     @Getter
