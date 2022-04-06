@@ -21,7 +21,7 @@ public class ProjectDto {
         private ProjectType projectType;
 
         @Builder
-        public Request(
+        private Request(
             String title,
             String description,
             String email,
