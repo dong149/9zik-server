@@ -35,10 +35,15 @@ class ProjectServiceTest extends GoozikServiceTest {
     @Mock
     UserRepository userRepository;
 
-    private final ProjectDto.Request testRequest = ProjectDto.Request.builder().email(TEST_EMAIL).build();
+    private final ProjectDto.Request testRequest = ProjectDto.Request.builder()
+                                                                     .title(TITLES.get(0))
+                                                                     .description(DESCRIPTIONS.get(0))
+                                                                     .email(EMAIL)
+                                                                     .projectType(PROJECT_TYPES.get(0))
+                                                                     .build();
 
     @Test
-    @DisplayName("project findAll 잘동작하는지 확인")
+    @DisplayName("project findAll 성공 확인")
     void getProjects() {
         // given
         Pageable testPageable = PageRequest.of(0, 50);
@@ -55,14 +60,14 @@ class ProjectServiceTest extends GoozikServiceTest {
         then(projectRepository).should().findAll(testPageable);
         assertAll(
             () -> assertThat(actualResponses).hasSize(testProjects.size()),
-            () -> assertThat(actualResponses.get(FIRST).getTitle()).isEqualTo(TEST_TITLES.get(FIRST)));
+            () -> assertThat(actualResponses.get(FIRST_IDX).getTitle()).isEqualTo(TITLES.get(FIRST_IDX)));
     }
 
     @Test
     @DisplayName("project 생성 확인")
     void createProject() {
         // given
-        given(userRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.ofNullable(testUser));
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.ofNullable(testUser));
 
         // when
         projectService.createProject(testRequest);
@@ -75,7 +80,7 @@ class ProjectServiceTest extends GoozikServiceTest {
     @DisplayName("project 생성시, 존재하지 않는 유저일경우 예외 발생 확인")
     void createProjectsThrow() {
         // given
-        given(userRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.empty());
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> projectService.createProject(testRequest)).isInstanceOf(EntityNotFoundException.class);

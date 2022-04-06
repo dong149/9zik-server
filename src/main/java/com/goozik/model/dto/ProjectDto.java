@@ -19,11 +19,18 @@ public class ProjectDto {
         private String description;
         private String email;
         private ProjectType projectType;
-        private int likeCount;
 
         @Builder
-        public Request(String email) {
+        public Request(
+            String title,
+            String description,
+            String email,
+            ProjectType projectType) {
+
+            this.title = title;
+            this.description = description;
             this.email = email;
+            this.projectType = projectType;
         }
     }
 
@@ -35,7 +42,7 @@ public class ProjectDto {
         private String title;
         private String description;
         private String picture;
-        private Integer likeCount;
+        private int likeCount;
         private ProjectType projectType;
         private LocalDateTime createdAt;
 
