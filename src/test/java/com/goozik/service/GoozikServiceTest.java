@@ -5,7 +5,7 @@ import com.goozik.model.entity.Project;
 import com.goozik.model.entity.User;
 import java.util.List;
 
-public class GoozikServiceTest {
+public abstract class GoozikServiceTest {
 
     protected static final int FIRST_IDX = 0;
     protected static final String EMAIL = "test@test.com";
