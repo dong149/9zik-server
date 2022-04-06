@@ -1,14 +1,14 @@
 package com.goozik.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import com.goozik.model.dto.ProjectDto;
 import com.goozik.model.entity.Project;
-import com.goozik.model.entity.User;
 import com.goozik.repository.ProjectRepository;
 import com.goozik.repository.UserRepository;
 import java.util.List;
@@ -25,7 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
-class ProjectServiceTest {
+class ProjectServiceTest extends GoozikServiceTest {
 
     @InjectMocks
     ProjectService projectService;
@@ -35,15 +35,10 @@ class ProjectServiceTest {
     @Mock
     UserRepository userRepository;
 
-    private static final String TEST_EMAIL = "test@test.com";
-    private final User testUser = User.builder().name("test").email(TEST_EMAIL).build();
     private final ProjectDto.Request testRequest = ProjectDto.Request.builder().email(TEST_EMAIL).build();
-    private final List<Project> testProjects = List.of(
-        Project.builder().user(testUser).title("test1").build(),
-        Project.builder().user(testUser).title("test2").build());
 
     @Test
-    @DisplayName("get 잘동작하는지 확인")
+    @DisplayName("project findAll 잘동작하는지 확인")
     void getProjects() {
         // given
         Pageable testPageable = PageRequest.of(0, 50);
@@ -58,12 +53,13 @@ class ProjectServiceTest {
 
         // then
         then(projectRepository).should().findAll(testPageable);
-        assertThat(actualResponses).hasSize(2);
-        assertThat(actualResponses.get(0).getTitle()).isEqualTo("test1");
+        assertAll(
+            () -> assertThat(actualResponses).hasSize(testProjects.size()),
+            () -> assertThat(actualResponses.get(FIRST).getTitle()).isEqualTo(TEST_TITLES.get(FIRST)));
     }
 
     @Test
-    @DisplayName("post 잘동작하는지 확인")
+    @DisplayName("project 생성 확인")
     void createProject() {
         // given
         given(userRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.ofNullable(testUser));
@@ -76,15 +72,12 @@ class ProjectServiceTest {
     }
 
     @Test
-    @DisplayName("post시 에러 발생")
+    @DisplayName("project 생성시, 존재하지 않는 유저일경우 예외 발생 확인")
     void createProjectsThrow() {
         // given
         given(userRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.empty());
 
-        // when
-        Throwable throwable = catchThrowable(() -> projectService.createProject(testRequest));
-
-        // then
-        assertThat(throwable).isInstanceOf(EntityNotFoundException.class);
+        // when, then
+        assertThatThrownBy(() -> projectService.createProject(testRequest)).isInstanceOf(EntityNotFoundException.class);
     }
 }
