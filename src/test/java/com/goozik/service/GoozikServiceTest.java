@@ -9,6 +9,7 @@ public abstract class GoozikServiceTest {
 
     protected static final int FIRST_IDX = 0;
     protected static final String EMAIL = "test@test.com";
+    protected static final String NON_EXIST_EMAIL = "no@no.com";
     protected static final List<String> TITLES = List.of("test1", "test2");
     protected static final List<String> DESCRIPTIONS = List.of("test description1", "test description2");
     protected static final List<ProjectType> PROJECT_TYPES = List.of(ProjectType.TOY, ProjectType.BUSINESS);

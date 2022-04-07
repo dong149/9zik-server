@@ -83,6 +83,7 @@ class ProjectServiceTest extends GoozikServiceTest {
         given(userRepository.findByEmail(EMAIL)).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> projectService.createProject(testRequest)).isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> projectService.createProject(testRequest))
+            .isInstanceOf(EntityNotFoundException.class);
     }
 }
