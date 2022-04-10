@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableJpaAuditing
 @EnableConfigurationProperties(AppProperties.class)
 @SpringBootApplication
+@EnableJpaAuditing
 public class GoozikApiApplication {
 
     public static void main(String[] args) {
