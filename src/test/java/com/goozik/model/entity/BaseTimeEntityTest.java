@@ -1,86 +1,73 @@
 package com.goozik.model.entity;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
+import com.goozik.model.constants.Role;
+import com.goozik.model.entity.User.UserBuilder;
+import com.goozik.repository.UserRepository;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@ExtendWith(MockitoExtension.class)
+@DataJpaTest
 class BaseTimeEntityTest {
 
-    @Mock
-    private User user;
-
-    @Mock
-    private Project project;
-
-    private final LocalDateTime NOW = LocalDateTime.of(
-        2022,6,4
-        ,13,22,50
+    private static final LocalDateTime REFERENCE_DATE_NOW = LocalDateTime.of(
+        2022, 1, 1
+        , 0, 0, 0
     );
 
-    private final LocalDateTime PROJECT_CREATED_AT = LocalDateTime.of(
-        2022,6,4
-        ,17,6,11
-    );
+    @Autowired
+    private UserRepository userRepository;
 
-    private final LocalDateTime REFERENCE_DATE_STARTED_AT = LocalDateTime.of(
-        2022,1,1
-        ,0,0,0
-    );
+    @Autowired
+    private EntityManager entityManager;
 
-    @BeforeEach
-    public void initialization() {
-        MockitoAnnotations.openMocks(this);
+    @Test
+    @DisplayName("BaseTimeEntity createAt, updateAt 생성 확인")
+    void testCreateUpdateTime() {
+        // given
+        userRepository.save(
+            new User.UserBuilder().email("email").password("password").name("name").nickName("nick")
+                .role(Role.USER).build());
+
+        // when
+        List<User> users = userRepository.findAll();
+
+        //then
+        User user = users.get(0);
+
+        assertAll(
+            () -> assertThat(user.getCreatedAt()).isNotNull().isAfter(REFERENCE_DATE_NOW),
+            () -> assertThat(user.getUpdatedAt()).isNotNull().isAfter(REFERENCE_DATE_NOW)
+        );
+
     }
 
     @Test
-    @DisplayName("유저 생성시 createAt/updateAt 값 검증")
-    void testUserTimeWhenCreateUser() {
-        assertTrue(user != null);
+    @DisplayName("updateAt 변경 확인")
+    void testUpdateTimeWhenModified() {
+        // given
+        User user = userRepository.save(
+            new UserBuilder().email("email").password("password").name("name").nickName("nick")
+                .role(Role.USER).build());
 
-        when(user.getCreatedAt()).thenReturn(NOW);
-        when(user.getUpdatedAt()).thenReturn(NOW);
+        LocalDateTime beforeUpdate = userRepository.save(user).getUpdatedAt();
 
-        assertAll(
-            () ->
-                assertTrue(user.getCreatedAt().isAfter(REFERENCE_DATE_STARTED_AT)),
+        user.update("name", "pick");
+        entityManager.flush();
+        entityManager.clear();
 
-            () ->
-                assertTrue(user.getUpdatedAt().isAfter(REFERENCE_DATE_STARTED_AT)),
+        // when
+        User updateUser = userRepository.findByEmail(user.getEmail())
+            .orElseThrow(IllegalArgumentException::new);
 
-            () ->
-                assertTrue(user.getCreatedAt().isEqual(user.getUpdatedAt()))
-        );
-    }
-
-    @Test
-    @DisplayName("프로젝트 생성시 createAt/updateAt 값 검증")
-    void testProjectTimeCreated() {
-        assertTrue(user != null);
-        assertTrue(project != null);
-
-        when(project.getCreatedAt()).thenReturn(PROJECT_CREATED_AT);
-        when(project.getUpdatedAt()).thenReturn(PROJECT_CREATED_AT);
-        when(user.getCreatedAt()).thenReturn(NOW);
-
-        assertAll(
-            () ->
-                assertTrue(project.getCreatedAt().isAfter(user.getCreatedAt())),
-
-            () ->
-                assertTrue(project.getUpdatedAt().isAfter(user.getCreatedAt())),
-
-            () ->
-                assertTrue(project.getCreatedAt().isEqual(project.getUpdatedAt()))
-        );
+        // then
+        assertThat(updateUser.getUpdatedAt()).isNotNull().isAfter(beforeUpdate);
     }
 }
