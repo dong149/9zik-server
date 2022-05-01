@@ -49,9 +49,9 @@ class ProjectServiceTest extends GoozikServiceTest {
         Pageable testPageable = PageRequest.of(0, 50);
         given(projectRepository.findAll(testPageable))
             .willReturn(new PageImpl<>(
-                testProjects,
+                TEST_PROJECTS,
                 testPageable,
-                testProjects.size()));
+                TEST_PROJECTS.size()));
 
         // when
         List<ProjectDto.Response> actualResponses = projectService.getProjects(testPageable).getContent();
@@ -59,7 +59,7 @@ class ProjectServiceTest extends GoozikServiceTest {
         // then
         then(projectRepository).should().findAll(testPageable);
         assertAll(
-            () -> assertThat(actualResponses).hasSize(testProjects.size()),
+            () -> assertThat(actualResponses).hasSize(TEST_PROJECTS.size()),
             () -> assertThat(actualResponses.get(FIRST_IDX).getTitle()).isEqualTo(TITLES.get(FIRST_IDX)));
     }
 
@@ -67,7 +67,7 @@ class ProjectServiceTest extends GoozikServiceTest {
     @DisplayName("project 생성 확인")
     void createProject() {
         // given
-        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.ofNullable(testUser));
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.ofNullable(TEST_USER));
 
         // when
         projectService.createProject(testRequest);
