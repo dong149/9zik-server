@@ -1,5 +1,12 @@
 package com.goozik.service;
 
+import static com.goozik.utils.GoozikTestUtils.DESCRIPTIONS;
+import static com.goozik.utils.GoozikTestUtils.EMAIL;
+import static com.goozik.utils.GoozikTestUtils.FIRST_IDX;
+import static com.goozik.utils.GoozikTestUtils.PROJECT_TYPES;
+import static com.goozik.utils.GoozikTestUtils.TEST_PROJECTS;
+import static com.goozik.utils.GoozikTestUtils.TEST_USER;
+import static com.goozik.utils.GoozikTestUtils.TITLES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,7 +32,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
-class ProjectServiceTest extends GoozikServiceTest {
+class ProjectServiceTest {
 
     @InjectMocks
     ProjectService projectService;
@@ -42,6 +49,7 @@ class ProjectServiceTest extends GoozikServiceTest {
                                                                      .projectType(PROJECT_TYPES.get(0))
                                                                      .build();
 
+
     @Test
     @DisplayName("project findAll 성공 확인")
     void getProjects() {
@@ -57,7 +65,6 @@ class ProjectServiceTest extends GoozikServiceTest {
         List<ProjectDto.Response> actualResponses = projectService.getProjects(testPageable).getContent();
 
         // then
-        then(projectRepository).should().findAll(testPageable);
         assertAll(
             () -> assertThat(actualResponses).hasSize(TEST_PROJECTS.size()),
             () -> assertThat(actualResponses.get(FIRST_IDX).getTitle()).isEqualTo(TITLES.get(FIRST_IDX)));
