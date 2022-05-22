@@ -9,9 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -21,11 +18,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Project extends BaseTimeEntity {
+public class Project extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    //    @Id
+//    @GeneratedValue
+//    private Long id;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -70,11 +67,11 @@ public class Project extends BaseTimeEntity {
 
     public static Project of(ProjectDto.Request request, User user) {
         return Project.builder()
-                      .title(request.getTitle())
-                      .description(request.getDescription())
-                      .projectType(request.getProjectType())
-                      .userIdx(user.getId())
-                      .user(user)
-                      .build();
+            .title(request.getTitle())
+            .description(request.getDescription())
+            .projectType(request.getProjectType())
+            .userIdx(user.getId())
+            .user(user)
+            .build();
     }
 }

@@ -48,13 +48,13 @@ public class ProjectDto {
 
         public static Response from(Project project) {
             return Response.builder()
-                           .id(project.getId())
-                           .title(project.getTitle())
-                           .description(project.getDescription())
-                           .likeCount(project.getLikeCount())
-                           .projectType(project.getProjectType())
-                           .createdAt(project.getCreatedAt())
-                           .build();
+                .id(project.getId())
+                .title(project.getTitle())
+                .description(project.getDescription())
+                .likeCount(project.getLikeCount())
+                .projectType(project.getProjectType())
+                .createdAt(project.getCreatedAt())
+                .build();
         }
     }
 }
