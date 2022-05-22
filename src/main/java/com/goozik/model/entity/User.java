@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,13 +20,15 @@ import lombok.NoArgsConstructor;
 public class User extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private String nickName;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
@@ -39,6 +42,7 @@ public class User extends BaseTimeEntity {
     public User(
         ProviderType providerType,
         String name,
+        String nickName,
         String password,
         String email,
         String picture,
@@ -46,6 +50,7 @@ public class User extends BaseTimeEntity {
 
         this.providerType = providerType;
         this.name = name;
+        this.nickName = nickName;
         this.password = password;
         this.email = email;
         this.picture = picture;

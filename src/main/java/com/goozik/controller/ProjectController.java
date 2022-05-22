@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,12 @@ public class ProjectController {
         log.info("get projects page : {}, size : {}", page, size);
 
         return projectService.getProjects(PageRequest.of(page, size));
+    }
+
+    @GetMapping("/{id}")
+    public ProjectDto.Response getProject(@PathVariable Long id) {
+        log.info("get project id : {}", id);
+        return projectService.getProject(id);
     }
 
     @PostMapping
