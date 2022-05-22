@@ -29,7 +29,7 @@ class UserServiceTest extends GoozikServiceTest {
     @DisplayName("email로 user 조회 성공 확인")
     void getUser() {
         // given
-        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.ofNullable(testUser));
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.ofNullable(TEST_USER));
 
         // when
         UserDto.Response actualResponse = userService.getUser(EMAIL);

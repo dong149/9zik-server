@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
-
     //    @Id
 //    @GeneratedValue
 //    private Long id;

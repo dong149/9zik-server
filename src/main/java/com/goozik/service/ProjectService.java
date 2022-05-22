@@ -20,6 +20,15 @@ public class ProjectService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
+    public ProjectDto.Response getProject(Long id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException("user not found");
+        });
+
+        return ProjectDto.Response.from(project);
+    }
+
+    @Transactional(readOnly = true)
     public Page<ProjectDto.Response> getProjects(Pageable pageable) {
         return projectRepository.findAll(pageable).map(ProjectDto.Response::from);
     }
